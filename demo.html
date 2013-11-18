@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!-- Example extended from http://jsbin.com/exezex/4/ -->
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Event Broadcast</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="eventBroadcaster.js"></script>
+<style type="text/css">
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 20px;
+    transition: background 800ms;
+  }
+
+  html {
+    height: 100%;
+    background: hsl(193, 66%, 55%);
+    font: bold 40px helvetica, sans-serif;
+    color: red;
+  }
+
+  body {
+    height: 100%;
+    background: hsl(193, 66%, 65%);
+  }
+
+  div {
+    height: 100%;
+    background: hsl(193, 66%, 75%);
+  }
+
+  ul {
+    list-style: none;
+    background: hsl(193, 66%, 85%);
+  }
+
+  li {
+    height: 100%;
+    background: hsl(193, 66%, 95%);
+  }
+
+  .highlight {
+    background: red;
+  }
+</style>
+</head>
+<body>
+  <div class="">
+    <ul>
+      <li>Click on a layer to watch the event move through the DOM tree</li>
+    </ul>
+    <ul>
+      <li>Note this is a sibling UL element...</li>
+      <li>...with many LI items</li>
+      <li>Notice how propagation doesn't touch siblings</li>
+    </ul>
+  </div>
+  <script type="text/javascript">
+    var html = document.documentElement;
+    var body = document.body;
+    var div = body.querySelector('div');
+    var ul = body.querySelectorAll('ul');
+    var li = body.querySelectorAll('li');
+    var pause = 200;
+
+    // Capture
+    html.addEventListener('click', callback, true);
+    body.addEventListener('click', callback, true);
+    div.addEventListener('click', callback, true);
+    html.addEventListener('click', callback, true);
+    //[].forEach.call
+    //hack to iterate over NodeList
+    // https://coderwall.com/p/jcmzxw
+    [].forEach.call(
+      ul,
+      function(el){
+        el.addEventListener('click', callback, true);
+      }
+    );
+    [].forEach.call(
+      li,
+      function(el){
+        el.addEventListener('click', callback, true);
+      }
+    );
+
+    // Bubble
+    html.addEventListener('click', callback, false);
+    body.addEventListener('click', callback, false);
+    div.addEventListener('click', callback, false);
+    html.addEventListener('click', callback, false);
+    [].forEach.call(
+      ul,
+      function(el){
+        el.addEventListener('click', callback, false);
+      }
+    );
+    [].forEach.call(
+      li,
+      function(el){
+        el.addEventListener('click', callback, false);
+      }
+    );
+
+    function callback(event) {
+      var ms = event.timeout = (event.timeout + pause) || 0;
+      var target = event.currentTarget;
+
+      setTimeout(function() {
+        target.classList.add('highlight');
+        setTimeout(function() {
+          target.classList.remove('highlight');
+        }, pause);
+      }, ms);
+    }
+
+    //using #broadcaster button
+    window.broadcastMessage = function(){
+      var vanillaEvent = new Event('click');;
+      $('body').broadcast(vanillaEvent);
+    };
+  </script>
+</body>
+</html>
