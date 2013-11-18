@@ -1,11 +1,11 @@
 (function($) {
-  $.fn.broadcast = function( event ){
+  "use strict";
+  $.fn.broadcastEvent = function( eventObj ){
     var trigger = function(){
-      var elm = $(this);
-      elm.each(function(index, el){
-        el.dispatchEvent(event);
-      })
-      elm.children().each(trigger);
+      if (this.dispatchEvent) {
+        this.dispatchEvent(eventObj);
+      }
+      $(this).children().each(trigger);
     };
     this.each(trigger);
     return this;

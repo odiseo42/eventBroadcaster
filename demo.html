@@ -10,14 +10,14 @@
   * {
     box-sizing: border-box;
     margin: 0;
-    padding: 20px;
+    padding: 12px;
     transition: background 800ms;
   }
 
   html {
     height: 100%;
     background: hsl(193, 66%, 55%);
-    font: bold 40px helvetica, sans-serif;
+    font: bold 20px helvetica, sans-serif;
     color: red;
   }
 
@@ -47,14 +47,19 @@
 </style>
 </head>
 <body>
-  <div class="">
+  <div>
     <ul>
       <li>Click on a layer to watch the event move through the DOM tree</li>
     </ul>
     <ul>
-      <li>Note this is a sibling UL element...</li>
-      <li>...with many LI items</li>
-      <li>Notice how propagation doesn't touch siblings</li>
+      <li>This is a sibling UL element...</li>
+      <li>...with many LI items...</li>
+      <li>Notice how propagation doesn't touch siblings
+        <ul>
+          <li>Deeptly nested A</li>
+          <li>Deeptly nestedB</li>
+        </ul>
+      </li>
     </ul>
   </div>
   <script type="text/javascript">
@@ -65,11 +70,11 @@
     var li = body.querySelectorAll('li');
     var pause = 200;
 
-    // Capture
+    // Capture phase listeners
     html.addEventListener('click', callback, true);
     body.addEventListener('click', callback, true);
     div.addEventListener('click', callback, true);
-    html.addEventListener('click', callback, true);
+
     //[].forEach.call
     //hack to iterate over NodeList
     // https://coderwall.com/p/jcmzxw
@@ -86,11 +91,10 @@
       }
     );
 
-    // Bubble
+    // Bubble phase listeners
     html.addEventListener('click', callback, false);
     body.addEventListener('click', callback, false);
     div.addEventListener('click', callback, false);
-    html.addEventListener('click', callback, false);
     [].forEach.call(
       ul,
       function(el){
@@ -118,8 +122,8 @@
 
     //using #broadcaster button
     window.broadcastMessage = function(){
-      var vanillaEvent = new Event('click');;
-      $('body').broadcast(vanillaEvent);
+      var wiserEvent = new Event('click');
+      $('body').broadcastEvent(wiserEvent);
     };
   </script>
 </body>
