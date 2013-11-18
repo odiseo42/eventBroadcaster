@@ -21,11 +21,6 @@
     color: red;
   }
 
-  body {
-    height: 100%;
-    background: hsl(193, 66%, 65%);
-  }
-
   div {
     height: 100%;
     background: hsl(193, 66%, 75%);
@@ -47,7 +42,7 @@
 </style>
 </head>
 <body>
-  <div>
+  <div class="wrapper">
     <ul>
       <li>Click on a layer to watch the event move through the DOM tree</li>
     </ul>
@@ -62,17 +57,14 @@
       </li>
     </ul>
   </div>
+  <button id="broadcastme">Broadcast click event!</button>
   <script type="text/javascript">
-    var html = document.documentElement;
-    var body = document.body;
-    var div = body.querySelector('div');
-    var ul = body.querySelectorAll('ul');
-    var li = body.querySelectorAll('li');
+    var div = document.querySelector('div.wrapper');
+    var ul = document.querySelectorAll('ul');
+    var li = document.querySelectorAll('li');
     var pause = 200;
 
     // Capture phase listeners
-    html.addEventListener('click', callback, true);
-    body.addEventListener('click', callback, true);
     div.addEventListener('click', callback, true);
 
     //[].forEach.call
@@ -92,8 +84,6 @@
     );
 
     // Bubble phase listeners
-    html.addEventListener('click', callback, false);
-    body.addEventListener('click', callback, false);
     div.addEventListener('click', callback, false);
     [].forEach.call(
       ul,
@@ -121,10 +111,12 @@
     }
 
     //using #broadcaster button
-    window.broadcastMessage = function(){
+    $('#broadcastme').click(function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
       var wiserEvent = new Event('click');
-      $('body').broadcastEvent(wiserEvent);
-    };
+      $('.wrapper').broadcastEvent(wiserEvent);
+    });
   </script>
 </body>
 </html>
