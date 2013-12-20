@@ -2,7 +2,7 @@
  * jQuery Event Broadcaster v1.0
  * Simple way to bradcast and emit customEvent
  * objects to all the DOM
- * https://github.com/carhartl/jquery-cookie
+ * https://github.com/odiseo42/eventBroadcaster
  *
  * Copyright 2013 Erick Mendoza
  * Released under the MIT license
