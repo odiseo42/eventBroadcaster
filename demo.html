@@ -62,7 +62,7 @@
       </li>
     </ul>
   </div>
-  <button id="broadcastme">Broadcast click event!</button>
+  <button id="broadcastme">Broadcast custom fancyEvent!</button>
   <script type="text/javascript">
     var div = document.querySelector('div.wrapper');
     var ul = document.querySelectorAll('ul');
@@ -70,6 +70,7 @@
     var pause = 200;
 
     // Capture phase listeners
+    div.addEventListener('fancyEvent', callback, true);
     div.addEventListener('click', callback, true);
 
     //[].forEach.call
@@ -78,27 +79,32 @@
     [].forEach.call(
       ul,
       function(el){
+        el.addEventListener('fancyEvent', callback, true);
         el.addEventListener('click', callback, true);
       }
     );
     [].forEach.call(
       li,
       function(el){
+        el.addEventListener('fancyEvent', callback, true);
         el.addEventListener('click', callback, true);
       }
     );
 
     // Bubble phase listeners
+    div.addEventListener('fancyEvent', callback, false);
     div.addEventListener('click', callback, false);
     [].forEach.call(
       ul,
       function(el){
+        el.addEventListener('fancyEvent', callback, false);
         el.addEventListener('click', callback, false);
       }
     );
     [].forEach.call(
       li,
       function(el){
+        el.addEventListener('fancyEvent', callback, false);
         el.addEventListener('click', callback, false);
       }
     );
@@ -119,8 +125,7 @@
     $('#broadcastme').click(function(e){
       e.preventDefault();
       e.stopImmediatePropagation();
-      var wiserEvent = new Event('click');
-      $('.wrapper').broadcastEvent(wiserEvent);
+      $.emitCustomEvent('fancyEvent', {foo: 'bar'});
     });
   </script>
 </body>
